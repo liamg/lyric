@@ -24,7 +24,7 @@ var authTimeoutDuration = time.Second * 30
 type AccessToken string
 
 func testToken(token AccessToken) bool {
-	_, err := NewClient(token).get("/account")
+	_, err := NewClient(token).get("/account", false)
 	return err != nil
 }
 

@@ -39,6 +39,7 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
+		fmt.Printf("%s (by %s)\n\n", song.Title, song.Artist.Title)
 		fmt.Println(song.Lyrics)
 	},
 }

@@ -3,9 +3,11 @@ package genius
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/url"
 	"strings"
+	"time"
+
+	retry "github.com/avast/retry-go"
 )
 
 type songData struct {
@@ -24,7 +26,7 @@ type Song struct {
 }
 
 type Artist struct {
-	Title string `json:"title"`
+	Title string `json:"name"`
 }
 
 func (c *client) GetSong(id int) (*Song, error) {
@@ -35,7 +37,7 @@ func (c *client) GetSong(id int) (*Song, error) {
 		Path:   fmt.Sprintf("/songs/%d", id),
 	}
 
-	data, err := c.get(songURL.String())
+	data, err := c.get(songURL.String(), true)
 	if err != nil {
 		return nil, err
 	}
@@ -47,23 +49,19 @@ func (c *client) GetSong(id int) (*Song, error) {
 
 	song := songData.Response.Song
 
-	song.Lyrics, err = c.scrapeLyrics(song.URL)
-	if err != nil {
+	if err := retry.Do(func() error {
+		var err error
+		song.Lyrics, err = c.scrapeLyrics(song.URL)
+		return err
+	}, retry.Attempts(3), retry.Delay(time.Second)); err != nil {
 		return nil, err
 	}
 
 	return &song, nil
-
 }
 
 func (c *client) scrapeLyrics(uri string) (string, error) {
-	resp, err := c.inner.Get(uri)
-	if err != nil {
-		return "", err
-	}
-	defer resp.Body.Close()
-
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := c.get(uri, true)
 	if err != nil {
 		return "", err
 	}

@@ -40,7 +40,7 @@ func (c *client) SearchSongs(term string) ([]SearchResult, error) {
 	q.Set("q", term)
 	searchURL.RawQuery = q.Encode()
 
-	data, err := c.get(searchURL.String())
+	data, err := c.get(searchURL.String(), true)
 	if err != nil {
 		return nil, err
 	}
