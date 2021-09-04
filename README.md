@@ -6,10 +6,12 @@ Song lyrics in your terminal via the [Genius API](https://docs.genius.com).
 
 ## Usage
 
-Search by song name, artist, or both.
+Search by song name, artist, parts of lyrics, or a combination.
 
 ```bash
-lyric "song/artist here"
+lyric "bohemian rhapsody"
+lyric "queen"
+lyric "Is this the real life? Is this just fantasy?"
 ```
 
 ## Install
