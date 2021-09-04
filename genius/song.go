@@ -3,6 +3,7 @@ package genius
 import (
 	"encoding/json"
 	"fmt"
+	"html"
 	"net/url"
 	"strings"
 	"time"
@@ -78,25 +79,34 @@ func (c *client) scrapeLyrics(uri string) (string, error) {
 		return "", err
 	}
 
-	start := `<div class="lyrics">`
-	index := strings.Index(string(data), start)
+	raw, err := extract(string(data), `<div class="lyrics">`, `</div>`, false, false)
+	if err != nil {
+		return extract(string(data), `<div class="Lyrics__Container-`, `<div class="Lyrics__Footer-`, true, true)
+	}
+
+	return raw, nil
+}
+
+func extract(raw, start, end string, inTag bool, convertNewLines bool) (string, error) {
+	index := strings.Index(raw, start)
 	if index == -1 {
 		return "", fmt.Errorf("lyrics unavailable (1)")
 	}
-	lyrics := string(data)[index+len(start):]
-
-	end := "</div>"
+	lyrics := raw[index+len(start):]
 	index = strings.Index(lyrics, end)
 	if index == -1 {
 		return "", fmt.Errorf("lyrics unavailable (2)")
 	}
 	lyrics = lyrics[:index]
-	return strings.TrimSpace(stripTags(lyrics)), nil
+	if convertNewLines {
+		lyrics = strings.ReplaceAll(lyrics, "<br/>", "\n")
+		lyrics = strings.ReplaceAll(lyrics, "<br>", "\n")
+	}
+	return strings.TrimSpace(html.UnescapeString(stripTags(lyrics, inTag))), nil
 }
 
-func stripTags(s string) string {
+func stripTags(s string, inside bool) string {
 	var output string
-	var inside bool
 	for _, r := range s {
 		if inside {
 			if r == '>' {
