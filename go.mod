@@ -1,4 +1,4 @@
-module github.com/liamg/lyricli
+module github.com/liamg/lyric
 
 go 1.17
 

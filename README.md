@@ -1,4 +1,4 @@
-# lyricli
+# lyric
 
 Song lyrics in your terminal via the [Genius API](https://docs.genius.com).
 
@@ -9,7 +9,7 @@ Song lyrics in your terminal via the [Genius API](https://docs.genius.com).
 Search by song name, artist, or both.
 
 ```bash
-lyricli "song/artist here"
+lyric "song/artist here"
 ```
 
 ## Install
@@ -17,11 +17,11 @@ lyricli "song/artist here"
 Install with go:
 
 ```bash
-go install github.com/liamg/lyricli/cmd/lyricli
+go install github.com/liamg/lyric/cmd/lyric
 ```
 
-...or [download the latest binary](https://github.com/liamg/lyricli/releases/latest).
+...or [download the latest binary](https://github.com/liamg/lyric/releases/latest).
 
 ## Configuration
 
-You don't need to do any real configuration, but you'll need a Genius account. Lyricli will pop your browser open to authenticate with Genius on first use, then you're all set. You'll be prompted again if reauthentication is ever needed.
+You don't need to do any real configuration, but you'll need a Genius account. Lyric will pop your browser open to authenticate with Genius on first use, then you're all set. You'll be prompted again if reauthentication is ever needed.

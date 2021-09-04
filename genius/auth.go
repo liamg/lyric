@@ -33,7 +33,7 @@ func saveTokenToCache(token AccessToken) error {
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(filepath.Join(dirname, ".lyricli"), []byte(token), 0600)
+	return ioutil.WriteFile(filepath.Join(dirname, ".lyric"), []byte(token), 0600)
 }
 
 func loadCachedToken() (AccessToken, error) {
@@ -41,7 +41,7 @@ func loadCachedToken() (AccessToken, error) {
 	if err != nil {
 		return "", err
 	}
-	data, err := ioutil.ReadFile(filepath.Join(dirname, ".lyricli"))
+	data, err := ioutil.ReadFile(filepath.Join(dirname, ".lyric"))
 	if err != nil {
 		return "", err
 	}

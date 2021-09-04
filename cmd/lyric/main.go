@@ -6,13 +6,13 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/liamg/lyricli/genius"
+	"github.com/liamg/lyric/genius"
 	"github.com/liamg/tml"
 	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "lyricli [song name]",
+	Use:   "lyric [song name]",
 	Short: "Display song lyrics via the Genius API",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {

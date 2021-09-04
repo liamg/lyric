@@ -1,8 +1,8 @@
 builds:
   -
-    id: lyricli
-    main: ./cmd/lyricli
-    binary: lyricli
+    id: lyric
+    main: ./cmd/lyric
+    binary: lyric
     env:
       - CGO_ENABLED=0
     goos:
@@ -29,5 +29,5 @@ release:
   prerelease: auto
   github:
     owner: liamg
-    name: lyricli
+    name: lyric
 
