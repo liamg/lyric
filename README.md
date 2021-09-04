@@ -20,4 +20,4 @@ Install with go:
 go install github.com/liamg/lyricli/cmd/lyricli
 ```
 
-...or [download the latest binary](https://github.com/liamg/lyricli/releases).
+...or [download the latest binary](https://github.com/liamg/lyricli/releases/latest).
