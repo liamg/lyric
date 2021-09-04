@@ -22,7 +22,16 @@ type Song struct {
 	Title  string `json:"title"`
 	Artist Artist `json:"primary_artist"`
 	URL    string `json:"url"`
-	Lyrics string `json:"-"`
+	Lyrics Lyrics `json:"-"`
+}
+
+type Lyrics struct {
+	Verses []Verse `json:"-"`
+}
+
+type Verse struct {
+	Label string
+	Lines []string
 }
 
 type Artist struct {
@@ -49,13 +58,16 @@ func (c *client) GetSong(id int) (*Song, error) {
 
 	song := songData.Response.Song
 
+	var rawLyrics string
 	if err := retry.Do(func() error {
 		var err error
-		song.Lyrics, err = c.scrapeLyrics(song.URL)
+		rawLyrics, err = c.scrapeLyrics(song.URL)
 		return err
 	}, retry.Attempts(3), retry.Delay(time.Second)); err != nil {
 		return nil, err
 	}
+
+	song.Lyrics = parseLyrics(rawLyrics)
 
 	return &song, nil
 }
@@ -100,4 +112,29 @@ func stripTags(s string) string {
 	}
 
 	return output
+}
+
+func parseLyrics(raw string) Lyrics {
+	var lyrics Lyrics
+	var verse Verse
+
+	for _, line := range strings.Split(raw, "\n") {
+		line = strings.TrimSpace(line)
+		if len(verse.Lines) > 0 && line == "" {
+			lyrics.Verses = append(lyrics.Verses, verse)
+			verse = Verse{}
+			continue
+		}
+		if len(verse.Lines) == 0 && verse.Label == "" && strings.HasPrefix(line, "[") && strings.HasSuffix(line, "]") {
+			verse.Label = line[1 : len(line)-1]
+			continue
+		}
+		verse.Lines = append(verse.Lines, line)
+	}
+
+	if len(verse.Lines) > 0 {
+		lyrics.Verses = append(lyrics.Verses, verse)
+	}
+
+	return lyrics
 }
