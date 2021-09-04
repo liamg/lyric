@@ -107,6 +107,7 @@ func Authenticate() (AccessToken, error) {
 	case err := <-errorChan:
 		return token, err
 	case token = <-tokenChan:
+		fmt.Println("Authentication complete!")
 		_ = saveTokenToCache(token)
 		return token, nil
 	}
