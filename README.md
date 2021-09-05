@@ -25,7 +25,7 @@ lyric
 Install with go:
 
 ```bash
-go install github.com/liamg/lyric/cmd/lyric
+go install github.com/liamg/lyric/cmd/lyric@latest
 ```
 
 ...or [download the latest binary](https://github.com/liamg/lyric/releases/latest).
