@@ -14,7 +14,7 @@ lyric "queen"
 lyric "Is this the real life? Is this just fantasy?"
 ```
 
-...or run without any arguments to attempt to fetch lyrics for the currently playing song (spotify + ncspot are currently supported.)
+...or run without any arguments to attempt to fetch lyrics for the currently playing song (spotify + [ncspot](https://github.com/hrkfdn/ncspot) are currently supported.)
 
 ```bash
 lyric
