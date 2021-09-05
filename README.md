@@ -14,6 +14,12 @@ lyric "queen"
 lyric "Is this the real life? Is this just fantasy?"
 ```
 
+...or run without any arguments to attempt to fetch lyrics for the currently playing song (spotify + ncspot are currently supported.)
+
+```bash
+lyric
+```
+
 ## Install
 
 Install with go:

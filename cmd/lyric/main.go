@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/liamg/lyric/genius"
+	"github.com/liamg/lyric/nowplaying"
 	"github.com/liamg/tml"
 	"github.com/spf13/cobra"
 )
@@ -14,43 +15,51 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "lyric [song name]",
 	Short: "Display song lyrics via the Genius API",
-	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if noColours {
 			tml.DisableFormatting()
 		}
 
-		term := strings.Join(args, " ")
+		var term string
+
+		if len(args) == 0 {
+			current, err := nowplaying.GetCurrent()
+			if err != nil {
+				fail("No search terms provided, and could not determine currently playing song.")
+			}
+			term = fmt.Sprintf("%s %s", current.Title, current.Artist)
+		} else {
+			term = strings.Join(args, " ")
+		}
 
 		token, err := genius.Authenticate()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error during authentication: %s\n", err)
-			os.Exit(1)
+			fail("Authentication failed: %s", err)
 		}
 
 		client := genius.NewClient(token)
 		songs, err := client.SearchSongs(term)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to search: %s\n", err)
-			os.Exit(1)
-
+			fail("Failed to search: %s", err)
 		}
 
 		if len(songs) == 0 {
-			fmt.Fprintf(os.Stderr, "Nothing found for '%s'.\n", term)
-			os.Exit(1)
+			fail("Nothing found for '%s'.", term)
 		}
 
 		song, err := client.GetSong(songs[0].ID)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to retrieve lyrics: %s\n", err)
-			os.Exit(1)
+			fail("Failed to retrieve lyrics: %s", err)
 		}
 
 		printLyrics(song)
-
 	},
+}
+
+func fail(format string, args ...interface{}) {
+	fmt.Fprintf(os.Stderr, format+"\n", args...)
+	os.Exit(1)
 }
 
 var colourSequence = []string{
